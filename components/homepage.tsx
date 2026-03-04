@@ -1,13 +1,14 @@
 "use client";
 
-import { CircleDot, Layers, BookOpen, ArrowRight } from "lucide-react";
+import { CircleDot, Layers, BookOpen, ArrowRight, Zap } from "lucide-react";
 import type { GameMode } from "@/lib/game-data";
 
 interface HomepageProps {
   onSelectGame: (mode: GameMode) => void;
+  onStartQuiz?: () => void;
 }
 
-export function Homepage({ onSelectGame }: HomepageProps) {
+export function Homepage({ onSelectGame, onStartQuiz }: HomepageProps) {
   return (
     <main className="min-h-screen flex flex-col">
       {/* Header */}
@@ -31,6 +32,36 @@ export function Homepage({ onSelectGame }: HomepageProps) {
             study mode and start building your word power.
           </p>
         </div>
+
+        {/* YDS Quiz - Featured Card */}
+        <button
+          onClick={onStartQuiz}
+          className="group relative overflow-hidden rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-card to-primary/5 p-8 text-left transition-all duration-300 hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring w-full max-w-2xl mb-6"
+        >
+          <div className="flex items-start gap-6">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 flex-shrink-0">
+              <Zap className="h-8 w-8 text-primary" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="text-xl font-semibold text-foreground font-mono">
+                  YDS Çıkmış Sorular
+                </h2>
+                <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  Yeni
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                Gerçek YDS sınavlarından çıkmış sorularla pratik yapın. Yanlış
+                yaptığınız soruları tekrar çözün ve ilerlemenizi takip edin.
+              </p>
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <span>Hemen Başla</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </div>
+        </button>
 
         {/* Game Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">

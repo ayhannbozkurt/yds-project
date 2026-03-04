@@ -6,10 +6,13 @@ import { SetupPage } from "@/components/setup-page";
 import { WheelGame } from "@/components/wheel-game";
 import { SimpleWheelGame } from "@/components/simple-wheel-game";
 import { FlashcardGame } from "@/components/flashcard-game";
+import { YdsQuizGame } from "@/components/yds-quiz-game";
 import type { GameMode, AppView, QuestionItem, WheelMode, SimpleWheelItem } from "@/lib/game-data";
 
+type ExtendedView = AppView | "quiz";
+
 export default function Page() {
-  const [view, setView] = useState<AppView>("home");
+  const [view, setView] = useState<ExtendedView>("home");
   const [gameMode, setGameMode] = useState<GameMode>("wheel");
   const [wheelMode, setWheelMode] = useState<WheelMode>("simple");
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
@@ -41,8 +44,16 @@ export default function Page() {
     setSimpleItems([]);
   }, []);
 
+  const handleStartQuiz = useCallback(() => {
+    setView("quiz");
+  }, []);
+
   if (view === "home") {
-    return <Homepage onSelectGame={handleSelectGame} />;
+    return <Homepage onSelectGame={handleSelectGame} onStartQuiz={handleStartQuiz} />;
+  }
+
+  if (view === "quiz") {
+    return <YdsQuizGame onHome={handleHome} />;
   }
 
   if (view === "setup") {
