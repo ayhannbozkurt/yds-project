@@ -38,7 +38,11 @@ export function WheelGame({ initialQuestions, onBack, onHome }: WheelGameProps) 
     const segmentAngle = 360 / questions.length;
     const targetAngle = segmentAngle * randomIndex + segmentAngle / 2;
     const spins = 5 + Math.random() * 3;
-    const finalRotation = rotation + spins * 360 + (360 - targetAngle);
+    const desiredMod = ((270 - targetAngle) % 360 + 360) % 360;
+    const currentMod = ((rotation % 360) + 360) % 360;
+    let delta = desiredMod - currentMod;
+    if (delta < 0) delta += 360;
+    const finalRotation = rotation + spins * 360 + delta;
 
     setRotation(finalRotation);
 
