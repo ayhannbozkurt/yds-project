@@ -18,6 +18,7 @@ export function SimpleWheelGame({ initialItems, onBack, onHome }: SimpleWheelGam
   const [selectedItem, setSelectedItem] = useState<SimpleWheelItem | null>(null);
   const [rotation, setRotation] = useState(0);
   const [removedCount, setRemovedCount] = useState(0);
+  const [blockedNextItemId, setBlockedNextItemId] = useState<string | null>(null);
   const wheelRef = useRef<SVGSVGElement>(null);
   const totalItems = initialItems.length;
 
@@ -32,26 +33,39 @@ export function SimpleWheelGame({ initialItems, onBack, onHome }: SimpleWheelGam
     setSelectedItem(null);
     setIsSpinning(true);
 
-    const randomIndex = Math.floor(Math.random() * items.length);
     const segmentAngle = 360 / items.length;
-    const targetAngle = segmentAngle * randomIndex + segmentAngle / 2;
+    const getLandedIndex = (rotationValue: number) => {
+      const pointerAngle = ((270 - (rotationValue % 360)) % 360 + 360) % 360;
+      return Math.floor(pointerAngle / segmentAngle) % items.length;
+    };
+
     const spins = 5 + Math.random() * 3;
-    const desiredMod = ((270 - targetAngle) % 360 + 360) % 360;
-    const currentMod = ((rotation % 360) + 360) % 360;
-    let delta = desiredMod - currentMod;
-    if (delta < 0) delta += 360;
-    const finalRotation = rotation + spins * 360 + delta;
+    const extraAngle = Math.random() * 360;
+    let finalRotation = rotation + spins * 360 + extraAngle;
+    let landedIndex = getLandedIndex(finalRotation);
+
+    // After "Surdur", prevent the very next spin from landing on the same word.
+    if (
+      blockedNextItemId &&
+      items.length > 1 &&
+      items[landedIndex]?.id === blockedNextItemId
+    ) {
+      finalRotation += segmentAngle;
+      landedIndex = getLandedIndex(finalRotation);
+    }
 
     setRotation(finalRotation);
+    setBlockedNextItemId(null);
 
     setTimeout(() => {
       setIsSpinning(false);
-      setSelectedItem(items[randomIndex]);
+      setSelectedItem(items[landedIndex]);
     }, 4000);
-  }, [isSpinning, items, rotation]);
+  }, [blockedNextItemId, isSpinning, items, rotation]);
 
   function handleResume() {
     // Keep the word on the wheel, seamlessly return to spin-ready state
+    setBlockedNextItemId(selectedItem?.id ?? null);
     setSelectedItem(null);
   }
 
@@ -59,6 +73,7 @@ export function SimpleWheelGame({ initialItems, onBack, onHome }: SimpleWheelGam
     if (!selectedItem) return;
     setItems((prev) => prev.filter((item) => item.id !== selectedItem.id));
     setRemovedCount((c) => c + 1);
+    setBlockedNextItemId(null);
     setSelectedItem(null);
   }
 

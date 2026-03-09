@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { CircleDot, Layers, BookOpen, ArrowRight, Zap } from "lucide-react";
 import type { GameMode } from "@/lib/game-data";
 
@@ -23,14 +24,31 @@ export function Homepage({ onSelectGame, onStartQuiz }: HomepageProps) {
 
       {/* Hero */}
       <section className="flex flex-col items-center px-6 py-16 flex-1">
-        <div className="max-w-2xl text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground font-mono text-balance">
-            Master Your Vocabulary
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            Practice YDS English vocabulary with interactive games. Choose your
-            study mode and start building your word power.
-          </p>
+        <div className="w-full max-w-5xl mb-12">
+          <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_260px]">
+            <div className="max-w-2xl text-left">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground font-mono text-balance">
+                Master Your Vocabulary
+              </h1>
+              <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Practice YDS English vocabulary with interactive games. Choose your
+                study mode and start building your word power.
+              </p>
+            </div>
+
+            <div className="justify-self-center md:justify-self-end">
+              <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+                <Image
+                  src="/home-hero-photo.png"
+                  alt="Homepage hero visual"
+                  width={260}
+                  height={340}
+                  className="h-[220px] w-[220px] object-cover md:h-[300px] md:w-[260px]"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* YDS Quiz - Featured Card */}

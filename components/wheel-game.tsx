@@ -34,21 +34,19 @@ export function WheelGame({ initialQuestions, onBack, onHome }: WheelGameProps) 
     setAnswerState("none");
     setIsSpinning(true);
 
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const segmentAngle = 360 / questions.length;
-    const targetAngle = segmentAngle * randomIndex + segmentAngle / 2;
     const spins = 5 + Math.random() * 3;
-    const desiredMod = ((270 - targetAngle) % 360 + 360) % 360;
-    const currentMod = ((rotation % 360) + 360) % 360;
-    let delta = desiredMod - currentMod;
-    if (delta < 0) delta += 360;
-    const finalRotation = rotation + spins * 360 + delta;
+    const extraAngle = Math.random() * 360;
+    const finalRotation = rotation + spins * 360 + extraAngle;
 
     setRotation(finalRotation);
 
+    const segmentAngle = 360 / questions.length;
+    const pointerAngle = ((270 - (finalRotation % 360)) % 360 + 360) % 360;
+    const landedIndex = Math.floor(pointerAngle / segmentAngle) % questions.length;
+
     setTimeout(() => {
       setIsSpinning(false);
-      setSelectedQuestion(questions[randomIndex]);
+      setSelectedQuestion(questions[landedIndex]);
     }, 4000);
   }, [isSpinning, questions, rotation]);
 
